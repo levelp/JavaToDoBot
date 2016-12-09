@@ -1,7 +1,4 @@
-import commands.HelloCommand;
-import commands.HelpCommand;
-import commands.ListCommand;
-import commands.StartCommand;
+import commands.*;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
@@ -23,14 +20,19 @@ public class JavaToDoBot extends TelegramLongPollingCommandBot {
     private static String BOT_TOKEN; // Токен для бота
 
     private JavaToDoBot() throws IOException {
+        // Регистрация всех доступных команд бота
         register(new HelloCommand());
         register(new ListCommand());
+        register(new MulTableCommand());
 
+        // Помощь со списком и описанием всех команд
         HelpCommand helpCommand = new HelpCommand(this);
         register(helpCommand);
 
+        // Команда /start тоже будет показывать помощь по командам
         register(new StartCommand(helpCommand));
 
+        // Если пришла не команда, а простое сообщение
         registerDefaultAction((absSender, message) -> {
             // Создаём сообщение для отправки пользователю
             SendMessage msg = new SendMessage();
